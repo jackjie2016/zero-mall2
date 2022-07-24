@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-api
+#  namespace: zero-mall
+  labels:
+    app: user-api
+spec:
+  replicas: 4
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: user-api
+  template:
+    metadata:
+      labels:
+        app: user-api
+        version: "v1.9"
+    spec:
+#      serviceAccountName: find-endpoints
+      containers:
+      - name: user-api
+#        image: nginx:latest
+        image: registry.cn-hangzhou.aliyuncs.com/zero-mall/user-api:v1.9
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh","-c","sleep 5"]
+        ports:
+        - containerPort: 8889
+        readinessProbe:
+          tcpSocket:
+            port: 8889
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8889
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 200m
+            memory: 50Mi
+          limits:
+            cpu: 300m
+            memory: 100Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-api-svc
+#  namespace: zero-mall
+spec:
+  ports:
+    - port: 8889
+      protocol: TCP
+      name: http-userapi
+#      NodePort: 30012
+#      targetPort: 8889
+  type: ClusterIP
+  selector:
+    app: user-api
+

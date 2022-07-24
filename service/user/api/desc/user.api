@@ -1,0 +1,100 @@
+syntax = "v1"
+
+info (
+	title: // TODO: add title
+	desc: // TODO: add description
+	author: "紫风天下行"
+	email: "610841147@qq.com"
+)
+
+type loginrequest {
+	// TODO: add members here and delete this comment
+	Mobile    string `form:"mobile"  validate:"required,min=3,max=11,mobile"`
+	Password  string `form:"password" validate:"required,min=5,max=10"`
+	Captcha   string `form:"captcha"  validate:"required,min=5,max=5"`
+	CaptchaId string `form:"captcha_id" validate:"required"`
+}
+
+type loginresponse {
+	// TODO: add members here and delete this comment
+	AccessToken  string `json:"accessToken"`
+	AccessExpire int64  `json:"accessExpire"`
+	RefreshAfter int64  `json:"refreshAfter"`
+}
+
+type inforequest {
+	// TODO: add members here and delete this comment
+	Id int64 `form:"id" validate:"required"`
+}
+
+type inforesponse {
+	// TODO: add members here and delete this comment
+	ID           int64  `json:"id"`
+	Username     string `json:"user_name"`
+	NickName     string `json:"nick_name"`
+	Gender       string `json:"gender"`
+	AccessToken  string `json:"accessToken"`
+	AccessExpire int64  `json:"accessExpire"`
+	RefreshAfter int64  `json:"refreshAfter"`
+}
+
+type createrequest {
+	// TODO: add members here and delete this comment
+	Username string `json:"user_name"`
+	NickName string `json:"nick_name"`
+	Gender   int    `json:"gender"`
+}
+
+type createresponse {
+	// TODO: add members here and delete this comment
+	ID int64 `json:"id"`
+}
+
+type editrequest {
+	// TODO: add members here and delete this comment
+	ID       int64  `json:"id"`
+	Username string `json:"user_name"`
+	NickName string `json:"nick_name"`
+	Gender   string `json:"gender"`
+}
+
+type editresponse {
+	// TODO: add members here and delete this comment
+
+}
+type logoutrequest {
+	// TODO: add members here and delete this comment
+
+}
+@server (
+	group: user
+	prefix: user/api/v1
+	middleware:IsLogin
+)
+service user-api {
+	@handler Login // TODO: set handler name and delete this comment
+	post /users/login(loginrequest) returns(loginresponse)
+	
+	@handler Register // TODO: set handler name and delete this comment
+	post /users/register(createrequest)
+}
+
+@server (
+	group: user
+	prefix: user/api/v1
+	jwt:JwtAuth
+	middleware:IsAdmin
+)
+service user-api {
+	@handler GetUser // TODO: set handler name and delete this comment
+	get /users/:userId(inforequest) returns(inforesponse)
+	
+	@handler EditUser // TODO: set handler name and delete this comment
+	post /users/edit(editrequest)
+	
+	@handler CreateUser // TODO: set handler name and delete this comment
+	post /users/create(createrequest)
+	
+	@handler Logout // TODO: set handler name and delete this comment
+	post /users/logout(logoutrequest)
+}

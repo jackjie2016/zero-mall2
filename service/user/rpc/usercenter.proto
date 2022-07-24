@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+option go_package ="./pb";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------ 
+
+//--------------------------------user--------------------------------
+message User {
+  int64 id = 1; //id
+  string mobile = 2; //mobile
+  string password = 3; //password
+  string nickName = 4; //nickName
+  string headUrl = 5; //headUrl
+  int64 birthday = 6; //birthday
+  string address = 7; //address
+  string desc = 8; //desc
+  string gender = 9; //gender
+  int64 role = 10; //role
+}
+
+message AddUserReq {
+  string mobile = 1; //mobile
+  string password = 2; //password
+  string nickName = 3; //nickName
+  string headUrl = 4; //headUrl
+  int64 birthday = 5; //birthday
+  string address = 6; //address
+  string desc = 7; //desc
+  string gender = 8; //gender
+  int64 role = 9; //role
+}
+
+message AddUserResp {
+}
+
+message UpdateUserReq {
+  int64 id = 1; //id
+  string mobile = 2; //mobile
+  string password = 3; //password
+  string nickName = 4; //nickName
+  string headUrl = 5; //headUrl
+  int64 birthday = 6; //birthday
+  string address = 7; //address
+  string desc = 8; //desc
+  string gender = 9; //gender
+  int64 role = 10; //role
+}
+
+message UpdateUserResp {
+}
+
+message DelUserReq {
+  int64 id = 1; //id
+}
+
+message DelUserResp {
+}
+
+message GetUserByIdReq {
+  int64 id = 1; //id
+}
+
+message GetUserByIdResp {
+  User user = 1; //user
+}
+
+message SearchUserReq {
+  int64 page = 1; //page
+  int64 pageSize = 2; //pageSize
+  int64 id = 3; //id
+  string mobile = 4; //mobile
+  string password = 5; //password
+  string nickName = 6; //nickName
+  string headUrl = 7; //headUrl
+  int64 birthday = 8; //birthday
+  string address = 9; //address
+  string desc = 10; //desc
+  string gender = 11; //gender
+  int64 role = 12; //role
+}
+
+message SearchUserResp {
+  repeated User user = 1; //user
+}
+
+
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service usercenter{ 
+
+	 //-----------------------user----------------------- 
+	 rpc AddUser(AddUserReq) returns (AddUserResp); 
+	 rpc UpdateUser(UpdateUserReq) returns (UpdateUserResp); 
+	 rpc DelUser(DelUserReq) returns (DelUserResp); 
+	 rpc GetUserById(GetUserByIdReq) returns (GetUserByIdResp); 
+	 rpc SearchUser(SearchUserReq) returns (SearchUserResp); 
+
+}

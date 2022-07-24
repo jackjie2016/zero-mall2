@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: go-zero-looklook1
+
+---
+
+
+#创建账号
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: go-zero-looklook1
+  name: find-endpoints1
+
+---
+#创建角色对应操作
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: discov-endpoints1
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get","list","watch"]
+
+---
+#给账号绑定角色
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: find-endpoints1-discov-endpoints1
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: discov-endpoints1
+subjects:
+  - kind: ServiceAccount
+    name: find-endpoints1
+    namespace: go-zero-looklook1

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-svc
+#  namespace: zero-mall
+  labels:
+    app: user-svc
+    release: prod
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: user-svc
+      release: prod
+  template:
+    metadata:
+      labels:
+        app: user-svc
+        version: v1.4
+        release: prod
+    spec:
+#      serviceAccountName: find-endpoints1
+      containers:
+      - name: user-svc
+        image: registry.cn-hangzhou.aliyuncs.com/zero-mall/user-rpc:v1.4
+#        command: ["sleep", "999999"]
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh","-c","sleep 5"]
+        ports:
+        - containerPort: 8001
+        readinessProbe:
+          tcpSocket:
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8001
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 200m
+            memory: 50Mi
+          limits:
+            cpu: 300m
+            memory: 100Mi
+#        volumeMounts:
+#        - name: timezone
+#          mountPath: /etc/localtime
+      volumes:
+        - name: timezone
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-svc-svc
+#  namespace: zero-mall
+spec:
+  ports:
+    - port: 8001
+      name: grpc-userrpc
+  selector:
+    app: user-svc
+
