@@ -15,7 +15,7 @@ message User {
   string password = 3; //password
   string nickName = 4; //nickName
   string headUrl = 5; //headUrl
-  int64 birthday = 6; //birthday
+  uint64 birthday = 6; //birthday
   string address = 7; //address
   string desc = 8; //desc
   string gender = 9; //gender
@@ -27,7 +27,7 @@ message AddUserReq {
   string password = 2; //password
   string nickName = 3; //nickName
   string headUrl = 4; //headUrl
-  int64 birthday = 5; //birthday
+  uint64 birthday = 5; //birthday
   string address = 6; //address
   string desc = 7; //desc
   string gender = 8; //gender
@@ -43,7 +43,7 @@ message UpdateUserReq {
   string password = 3; //password
   string nickName = 4; //nickName
   string headUrl = 5; //headUrl
-  int64 birthday = 6; //birthday
+  uint64 birthday = 6; //birthday
   string address = 7; //address
   string desc = 8; //desc
   string gender = 9; //gender
@@ -73,33 +73,77 @@ message SearchUserReq {
   int64 pageSize = 2; //pageSize
   int64 id = 3; //id
   string mobile = 4; //mobile
-  string password = 5; //password
-  string nickName = 6; //nickName
-  string headUrl = 7; //headUrl
-  int64 birthday = 8; //birthday
-  string address = 9; //address
-  string desc = 10; //desc
-  string gender = 11; //gender
-  int64 role = 12; //role
+  string nickName = 5; //nickName
+  uint64 birthday = 6; //birthday
+  string gender = 7; //gender
+  int64 role = 8; //role
 }
 
 message SearchUserResp {
-  repeated User user = 1; //user
+  int32 total=1;
+  repeated User Data = 2; //user
 }
 
 
 
+message MobileRequest{
+  string mobile = 1;
+}
+
+message CreateUserInfo{
+  string nickName=1;
+  string password = 2;
+  string mobile=3;
+}
+
+message CheckInfo{
+  string password=1;
+  string encryptedPassword=2;
+}
+message PageInfo{
+  uint32 pn = 1;
+  uint32 pSize = 2;
+}
+message CheckResponse{
+  bool success=1;
+}
+message UserInfoResponse{
+  uint32 id = 1;
+  string mobile=2;
+  string nickName=3;
+  uint64 birthDay=4;
+  string gender =5;
+  int32 role=6;
+}
+
+message UserListResponse{
+  int32 total=1;
+  repeated UserInfoResponse data=2;
+}
 // ------------------------------------ 
 // Rpc Func
 // ------------------------------------ 
+message GenerateTokenReq {
+  int64 userId = 1;
+  int64 role = 2;
+}
+message GenerateTokenResp {
+  string accessToken = 1;
+  int64  accessExpire = 2;
+  int64  refreshAfter = 3;
+}
 
 service usercenter{ 
 
 	 //-----------------------user----------------------- 
-	 rpc AddUser(AddUserReq) returns (AddUserResp); 
+   rpc CreateUser(CreateUserInfo) returns (GenerateTokenResp);//
 	 rpc UpdateUser(UpdateUserReq) returns (UpdateUserResp); 
 	 rpc DelUser(DelUserReq) returns (DelUserResp); 
-	 rpc GetUserById(GetUserByIdReq) returns (GetUserByIdResp); 
-	 rpc SearchUser(SearchUserReq) returns (SearchUserResp); 
+	 rpc GetUserById(GetUserByIdReq) returns (GetUserByIdResp);
 
+   rpc SearchUser(SearchUserReq) returns (UserListResponse);//用户列表
+   rpc GetUserByMobile(MobileRequest) returns (UserInfoResponse);//手机号查询
+
+   rpc CheckPassWord(CheckInfo) returns (CheckResponse);//检查密码
+   rpc generateToken(GenerateTokenReq) returns(GenerateTokenResp); //生成jwt的token
 }

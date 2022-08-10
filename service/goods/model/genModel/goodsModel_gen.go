@@ -6,6 +6,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"gorm.io/gorm"
 	"strings"
 	"time"
 
@@ -61,6 +62,7 @@ type (
 		GoodsFrontImage string        `db:"goods_front_image"`
 		IsNew           int64         `db:"is_new"`
 		IsHot           int64         `db:"is_hot"`
+		DeletedAt       gorm.DeletedAt
 	}
 )
 

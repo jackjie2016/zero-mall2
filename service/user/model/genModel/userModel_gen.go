@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
@@ -19,7 +20,7 @@ var (
 	userFieldNames          = builder.RawFieldNames(&User{})
 	userRows                = strings.Join(userFieldNames, ",")
 	userRowsExpectAutoSet   = strings.Join(stringx.Remove(userFieldNames, "`id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), ",")
-	userRowsWithPlaceHolder = strings.Join(stringx.Remove(userFieldNames, "`id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), "=?,") + "=?"
+	userRowsWithPlaceHolder = strings.Join(stringx.Remove(userFieldNames, "`id`", "`create_ti`me`", "`update_time`", "`create_at`", "`update_at`"), "=?,") + "=?"
 
 	cacheGoZeroMallUserIdPrefix     = "cache:goZeroMall:user:id:"
 	cacheGoZeroMallUserMobilePrefix = "cache:goZeroMall:user:mobile:"
@@ -30,8 +31,9 @@ type (
 		Insert(ctx context.Context, data *User) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*User, error)
 		FindOneByMobile(ctx context.Context, mobile string) (*User, error)
-		Update(ctx context.Context, newData *User) error
+		Update(ctx context.Context, data *User) error
 		Delete(ctx context.Context, id int64) error
+		TransCtx(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error
 	}
 
 	defaultUserModel struct {
@@ -40,16 +42,16 @@ type (
 	}
 
 	User struct {
-		Id       int64          `db:"id"`
-		Mobile   string         `db:"mobile"`
-		Password string         `db:"password"`
-		NickName sql.NullString `db:"nick_name"`
-		HeadUrl  sql.NullString `db:"head_url"`
-		Birthday sql.NullTime   `db:"birthday"`
-		Address  sql.NullString `db:"address"`
-		Desc     sql.NullString `db:"desc"`
-		Gender   sql.NullString `db:"gender"`
-		Role     int64          `db:"role"`
+		Id       int64      `db:"id"`
+		Mobile   string     `db:"mobile"`
+		Password string     `db:"password"`
+		NickName string     `db:"nick_name"`
+		HeadUrl  string     `db:"head_url"`
+		Birthday *time.Time `db:"birthday"`
+		Address  string     `db:"address"`
+		Desc     string     `db:"desc"`
+		Gender   string     `db:"gender"`
+		Role     int64      `db:"role"`
 	}
 )
 
@@ -117,6 +119,7 @@ func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, 
 	goZeroMallUserMobileKey := fmt.Sprintf("%s%v", cacheGoZeroMallUserMobilePrefix, data.Mobile)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
+		fmt.Println(query)
 		return conn.ExecCtx(ctx, query, data.Mobile, data.Password, data.NickName, data.HeadUrl, data.Birthday, data.Address, data.Desc, data.Gender, data.Role)
 	}, goZeroMallUserIdKey, goZeroMallUserMobileKey)
 	return ret, err
@@ -145,7 +148,11 @@ func (m *defaultUserModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, 
 	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", userRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary)
 }
-
+func (m *defaultUserModel) TransCtx(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
+	return m.TransactCtx(ctx, func(ctx context.Context, s sqlx.Session) error {
+		return fn(ctx, s)
+	})
+}
 func (m *defaultUserModel) tableName() string {
 	return m.table
 }

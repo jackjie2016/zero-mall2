@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-
 	"zero-mal/service/user/api/internal/svc"
 	"zero-mal/service/user/api/internal/types"
 
@@ -24,7 +23,11 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.Loginrequest) (resp *types.Loginresponse, err error) {
-	// todo: add your logic here and delete this line
 
-	return
+	// todo: add your logic here and delete this line
+	return &types.Loginresponse{
+		AccessToken:  "",
+		AccessExpire: 0,
+		RefreshAfter: 0,
+	}, nil
 }

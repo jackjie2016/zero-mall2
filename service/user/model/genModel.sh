@@ -9,7 +9,7 @@
 #生成的表名
 tables=$2
 #表生成的genmodel目录
-modeldir=./genModel
+modeldir=./gorm
 
 # 数据库配置
 host=127.0.0.1
@@ -20,4 +20,4 @@ passwd=root123
 
 
 echo "开始创建库：$dbname 的表：$1"
-goctl model mysql datasource -url="${username}:${passwd}@tcp(${host}:${port})/${dbname}" -table="${tables}"  -dir="${modeldir}" -cache=true --style=goZero
+goctl model mysql datasource -url="${username}:${passwd}@tcp(${host}:${port})/${dbname}" -table="${tables}"  -dir="${modeldir}" -cache=true --style=goZero --home="E:\go_work\zero-mal\template\1.3.9"

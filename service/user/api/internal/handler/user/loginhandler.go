@@ -33,6 +33,7 @@ func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.Error(w, errorx.NewDefaultError(errNew))
 			return
 		}
+
 		l := user.NewLoginLogic(r.Context(), svcCtx)
 		resp, err := l.Login(&req)
 		if err != nil {

@@ -29,8 +29,9 @@ type (
 	cartModel interface {
 		Insert(ctx context.Context, data *Cart) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Cart, error)
-		Update(ctx context.Context, newData *Cart) error
+		Update(ctx context.Context, data *Cart) error
 		Delete(ctx context.Context, id int64) error
+		TransCtx(ctx context.Context, session sqlx.Session) error
 	}
 
 	defaultCartModel struct {
@@ -84,12 +85,13 @@ func (m *defaultCartModel) FindOne(ctx context.Context, id int64) (*Cart, error)
 }
 
 func (m *defaultCartModel) Insert(ctx context.Context, data *Cart) (sql.Result, error) {
+
 	goZeroMallCartIdKey := fmt.Sprintf("%s%v", cacheGoZeroMallCartIdPrefix, data.Id)
-	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, cartRowsExpectAutoSet)
+
 		return conn.ExecCtx(ctx, query, data.AddTime, data.IsDeleted, data.User, data.Goods, data.Nums, data.Checked)
 	}, goZeroMallCartIdKey)
-	return ret, err
 }
 
 func (m *defaultCartModel) Update(ctx context.Context, data *Cart) error {
@@ -108,6 +110,11 @@ func (m *defaultCartModel) formatPrimary(primary interface{}) string {
 func (m *defaultCartModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
 	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", cartRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary)
+}
+func (m *defaultCartModel) TransCtx(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
+	return m.TransactCtx(ctx, func(ctx context.Context, s sqlx.Session) error {
+		return fn(ctx, s)
+	})
 }
 
 func (m *defaultCartModel) tableName() string {

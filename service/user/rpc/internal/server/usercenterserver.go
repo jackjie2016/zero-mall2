@@ -23,9 +23,9 @@ func NewUsercenterServer(svcCtx *svc.ServiceContext) *UsercenterServer {
 }
 
 // -----------------------user-----------------------
-func (s *UsercenterServer) AddUser(ctx context.Context, in *pb.AddUserReq) (*pb.AddUserResp, error) {
-	l := logic.NewAddUserLogic(ctx, s.svcCtx)
-	return l.AddUser(in)
+func (s *UsercenterServer) CreateUser(ctx context.Context, in *pb.CreateUserInfo) (*pb.GenerateTokenResp, error) {
+	l := logic.NewCreateUserLogic(ctx, s.svcCtx)
+	return l.CreateUser(in)
 }
 
 func (s *UsercenterServer) UpdateUser(ctx context.Context, in *pb.UpdateUserReq) (*pb.UpdateUserResp, error) {
@@ -43,7 +43,22 @@ func (s *UsercenterServer) GetUserById(ctx context.Context, in *pb.GetUserByIdRe
 	return l.GetUserById(in)
 }
 
-func (s *UsercenterServer) SearchUser(ctx context.Context, in *pb.SearchUserReq) (*pb.SearchUserResp, error) {
+func (s *UsercenterServer) SearchUser(ctx context.Context, in *pb.SearchUserReq) (*pb.UserListResponse, error) {
 	l := logic.NewSearchUserLogic(ctx, s.svcCtx)
 	return l.SearchUser(in)
+}
+
+func (s *UsercenterServer) GetUserByMobile(ctx context.Context, in *pb.MobileRequest) (*pb.UserInfoResponse, error) {
+	l := logic.NewGetUserByMobileLogic(ctx, s.svcCtx)
+	return l.GetUserByMobile(in)
+}
+
+func (s *UsercenterServer) CheckPassWord(ctx context.Context, in *pb.CheckInfo) (*pb.CheckResponse, error) {
+	l := logic.NewCheckPassWordLogic(ctx, s.svcCtx)
+	return l.CheckPassWord(in)
+}
+
+func (s *UsercenterServer) GenerateToken(ctx context.Context, in *pb.GenerateTokenReq) (*pb.GenerateTokenResp, error) {
+	l := logic.NewGenerateTokenLogic(ctx, s.svcCtx)
+	return l.GenerateToken(in)
 }

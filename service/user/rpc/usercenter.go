@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-
 	"zero-mal/service/user/rpc/internal/config"
 	"zero-mal/service/user/rpc/internal/server"
 	"zero-mal/service/user/rpc/internal/svc"

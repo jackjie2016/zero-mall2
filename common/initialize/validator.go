@@ -1,7 +1,6 @@
 package initialize
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	myvalidator "zero-mal/common/validator"
@@ -69,13 +68,17 @@ func RemoveTopStruct(fields map[string]string) map[string]string {
 
 func ReturnString(fields map[string]string) string {
 	msgs := RemoveTopStruct(fields)
-	return MapToJson(msgs)
+	return MapToString(msgs)
 }
 
-func MapToJson(m map[string]string) string {
-	jsonByte, err := json.Marshal(m)
-	if err != nil {
-		return ""
+func MapToString(m map[string]string) string {
+	var rsp string
+	for _, err := range m {
+		if len(rsp) > 0 {
+			rsp = fmt.Sprintf("%s,%s", rsp, err)
+		} else {
+			rsp = err
+		}
 	}
-	return string(jsonByte)
+	return rsp
 }
