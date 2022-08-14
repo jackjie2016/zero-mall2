@@ -43,5 +43,6 @@ func InitDb(dsn string) {
 		fmt.Println("InitDb err")
 		panic(err)
 	}
+	fmt.Println("InitDb conected")
 
 }
