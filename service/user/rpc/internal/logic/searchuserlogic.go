@@ -6,14 +6,14 @@ import (
 	"github.com/jinzhu/copier"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"gorm.io/gorm"
 	"zero-mal/global"
 	Grommodel "zero-mal/service/user/model/gorm"
 
+	"github.com/zeromicro/go-zero/core/logx"
+
+	"zero-mal/common/tool"
 	"zero-mal/service/user/rpc/internal/svc"
 	"zero-mal/service/user/rpc/pb"
-
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type SearchUserLogic struct {
@@ -22,23 +22,6 @@ type SearchUserLogic struct {
 	logx.Logger
 }
 
-func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		if page == 0 {
-			page = 1
-		}
-
-		switch {
-		case pageSize > 100:
-			pageSize = 100
-		case pageSize <= 0:
-			pageSize = 10
-		}
-
-		offset := (page - 1) * pageSize
-		return db.Offset(offset).Limit(pageSize)
-	}
-}
 func NewSearchUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchUserLogic {
 	return &SearchUserLogic{
 		ctx:    ctx,
@@ -74,7 +57,7 @@ func (l *SearchUserLogic) SearchUser(in *pb.SearchUserReq) (*pb.UserListResponse
 		//q = q.Must(elastic.NewMultiMatchQuery(req.KeyWords, "name", "goods_brief"))
 	}
 
-	result := localDB.Scopes(Paginate(int(in.Page), int(in.PageSize))).Find(&users)
+	result := localDB.Scopes(tool.Paginate(int(in.Page), int(in.PageSize))).Find(&users)
 	//查询没有错误
 	if result.Error != nil {
 		return nil, status.Errorf(codes.Internal, "异常")

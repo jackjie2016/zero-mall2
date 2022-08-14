@@ -2,6 +2,9 @@ package logic
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	model "zero-mal/service/goods/model/gorm"
 
 	"zero-mal/service/goods/rpc/internal/svc"
 	"zero-mal/service/goods/rpc/pb"
@@ -25,6 +28,22 @@ func NewUpdateBrandLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Updat
 
 func (l *UpdateBrandLogic) UpdateBrand(in *pb.BrandRequest) (*pb.Empty, error) {
 	// todo: add your logic here and delete this line
+	var brand *model.Brands
+	var err error
 
+	if brand, err = l.svcCtx.BrandsModel.FindOne(l.ctx, int64(in.Id)); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "品牌不存在")
+	}
+	if len(in.Name) > 0 {
+		brand.Name = in.Name
+	}
+
+	if len(in.Logo) > 0 {
+		brand.Logo = in.Logo
+	}
+
+	if err := l.svcCtx.BrandsModel.Update(l.ctx, brand); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "品牌更新失败")
+	}
 	return &pb.Empty{}, nil
 }

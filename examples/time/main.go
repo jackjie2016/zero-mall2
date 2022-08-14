@@ -19,7 +19,7 @@ func main() {
 		11, 21, 34, 01, 0, time.UTC)
 	fmt.Println(tm)
 	//时间戳转换为本地时间
-	fmt.Println(time.Unix(1487780010, 1))
+	fmt.Println("time.Unix:", time.Unix(1487780010, 1))
 	//loc2, _ := time.LoadLocation("Local")
 	todayZero, _ := time.Parse("2006-01-02 15:04:05", time.Now().Format("2006-01-02 15:04:05"))
 	fmt.Println("Parse:", todayZero)
@@ -54,4 +54,18 @@ func main() {
 	fmt.Println(theTime)
 	fmt.Println(sr)
 
+}
+
+func time2int() {
+	//t := &OldGood.CreatedAt
+
+	//fmt.Println(OldGood.CreatedAt.Format("2006-01-02 15:04:05"))
+
+	////转化所需模板
+	//loc, _ := time.LoadLocation("Local")                                                                            //获取时区
+	//theTime, _ := time.ParseInLocation(OldGood.CreatedAt.Format("2006-01-02 15:04:05"), "2006-01-02 15:04:05", loc) //使用模板在对应时区转化为time.time类型
+	//
+	//CreatedAt := time.Unix(int64(theTime.Unix()), 0)
+	//
+	//goods.CreatedAt = CreatedAt
 }

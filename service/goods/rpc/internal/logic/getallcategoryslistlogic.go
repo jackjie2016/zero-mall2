@@ -2,6 +2,9 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
+	"zero-mal/global"
+	model "zero-mal/service/goods/model/gorm"
 
 	"zero-mal/service/goods/rpc/internal/svc"
 	"zero-mal/service/goods/rpc/pb"
@@ -26,6 +29,9 @@ func NewGetAllCategorysListLogic(ctx context.Context, svcCtx *svc.ServiceContext
 // 商品分类
 func (l *GetAllCategorysListLogic) GetAllCategorysList(in *pb.Empty) (*pb.CategoryListResponse, error) {
 	// todo: add your logic here and delete this line
+	var categorys []model.Category
+	global.DB.Where(&model.Category{Level: 1}).Preload("SubCategory.SubCategory").Find(&categorys)
+	b, _ := json.Marshal(&categorys)
+	return &pb.CategoryListResponse{JsonData: string(b)}, nil
 
-	return &pb.CategoryListResponse{}, nil
 }

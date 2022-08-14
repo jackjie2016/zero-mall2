@@ -6,9 +6,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"gorm.io/gorm"
 	"strings"
 	"time"
+	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
@@ -30,6 +30,7 @@ type (
 	goodsModel interface {
 		Insert(ctx context.Context, data *Goods) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Goods, error)
+		Select(ctx context.Context, data *pb.GoodsFilterRequest) ([]*Goods, error)
 		Update(ctx context.Context, newData *Goods) error
 		Delete(ctx context.Context, id int64) error
 	}
@@ -62,7 +63,6 @@ type (
 		GoodsFrontImage string        `db:"goods_front_image"`
 		IsNew           int64         `db:"is_new"`
 		IsHot           int64         `db:"is_hot"`
-		DeletedAt       gorm.DeletedAt
 	}
 )
 
@@ -80,6 +80,108 @@ func (m *defaultGoodsModel) Delete(ctx context.Context, id int64) error {
 		return conn.ExecCtx(ctx, query, id)
 	}, goZeroMallGoodsIdKey)
 	return err
+}
+
+func (m *defaultGoodsModel) Select(ctx context.Context, data *pb.GoodsFilterRequest) ([]*Goods, error) {
+
+	var resp []*Goods
+	query := fmt.Sprintf("select %s from %s ", goodsRows, m.table)
+	isFirst := false
+	if data.PriceMin != 0 {
+		isFirst = true
+		query = fmt.Sprintf(query+"where shop_price >", data.PriceMin)
+	}
+	if data.PriceMax != 0 {
+		if isFirst {
+			query = fmt.Sprintf(query+"&  shop_price <", data.PriceMax)
+		} else {
+			isFirst = true
+			query = fmt.Sprintf(query+"where shop_price <", data.PriceMax)
+		}
+	}
+
+	if data.IsHot {
+		if isFirst {
+			query = fmt.Sprintf(query+"&  is_hot =", data.IsHot)
+		} else {
+			isFirst = true
+			query = fmt.Sprintf(query+"where is_hot =", data.IsHot)
+		}
+	}
+
+	if data.IsNew {
+		if isFirst {
+			query = fmt.Sprintf(query+"&  is_new =", data.IsNew)
+		} else {
+			isFirst = true
+			query = fmt.Sprintf(query+"where is_new =", data.IsNew)
+		}
+	}
+	if data.IsTab {
+		if isFirst {
+			query = fmt.Sprintf(query+"&  is_tab =", data.IsTab)
+		} else {
+			isFirst = true
+			query = fmt.Sprintf(query+"where is_tab =", data.IsTab)
+		}
+	}
+	var category Category
+	var subQuery string
+	var conn sqlx.SqlConn
+	categoryIDs := make([]interface{}, 0)
+	if data.TopCategory != 0 {
+
+		if category.Level == 1 {
+			subQuery = fmt.Sprintf("select id from category where parent_category_id in (select id from category WHERE parent_category_id=%d)", data.TopCategory)
+		} else if category.Level == 2 {
+			subQuery = fmt.Sprintf("select id from category WHERE parent_category_id=%d", data.TopCategory)
+		} else if category.Level == 3 {
+			subQuery = fmt.Sprintf("select id from category WHERE id=%d", data.TopCategory)
+		}
+
+		type CateResult struct {
+			ID int32
+		}
+		var CateResults []CateResult
+
+		err := conn.QueryRowsCtx(ctx, CateResults, subQuery)
+
+		if err != nil {
+			return nil, err
+		}
+
+		for _, c := range CateResults {
+			categoryIDs = append(categoryIDs, c.ID)
+		}
+	}
+
+	if len(categoryIDs) > 0 {
+		if isFirst {
+			query = fmt.Sprintf(query+"&  category_id in (%s)", categoryIDs...)
+		} else {
+			isFirst = true
+			query = fmt.Sprintf(query+"where category_id in (%s)", categoryIDs...)
+		}
+	}
+
+	if data.Pages == 0 {
+		data.Pages = 1
+	}
+	if data.PagePerNums == 0 {
+		data.PagePerNums = 10
+	}
+
+	query = fmt.Sprintf(query+" limit %d,%d", data.Pages, data.PagePerNums)
+
+	err := conn.QueryRowsCtx(ctx, resp, query)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultGoodsModel) FindOne(ctx context.Context, id int64) (*Goods, error) {

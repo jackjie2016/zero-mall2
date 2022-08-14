@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-
 	"zero-mal/service/goods/rpc/internal/svc"
 	"zero-mal/service/goods/rpc/pb"
 
@@ -23,8 +22,17 @@ func NewDeleteGoodsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delet
 	}
 }
 
-func (l *DeleteGoodsLogic) DeleteGoods(in *pb.DeleteGoodsInfo) (*pb.Empty, error) {
+func (l *DeleteGoodsLogic) DeleteGoods(req *pb.DeleteGoodsInfo) (*pb.Empty, error) {
 	// todo: add your logic here and delete this line
 
+	_, err := l.svcCtx.GoodsModel.FindOne(l.ctx, int64(req.Id))
+	if err != nil {
+		return nil, err
+	}
+
+	err = l.svcCtx.GoodsModel.Delete(l.ctx, int64(req.Id))
+	if err != nil {
+		return nil, err
+	}
 	return &pb.Empty{}, nil
 }

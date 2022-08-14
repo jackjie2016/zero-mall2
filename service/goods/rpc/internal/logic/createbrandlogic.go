@@ -2,6 +2,10 @@ package logic
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"zero-mal/global"
+	model "zero-mal/service/goods/model/gorm"
 
 	"zero-mal/service/goods/rpc/internal/svc"
 	"zero-mal/service/goods/rpc/pb"
@@ -26,5 +30,15 @@ func NewCreateBrandLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Creat
 func (l *CreateBrandLogic) CreateBrand(in *pb.BrandRequest) (*pb.BrandInfoResponse, error) {
 	// todo: add your logic here and delete this line
 
-	return &pb.BrandInfoResponse{}, nil
+	//新建品牌
+	if result := global.DB.Where("name=?", in.Name).First(&model.Brands{}); result.RowsAffected == 1 {
+		return nil, status.Errorf(codes.InvalidArgument, "品牌已存在")
+	}
+	brands := &model.Brands{
+		Name: in.Name,
+		Logo: in.Logo,
+	}
+
+	global.DB.Save(brands)
+	return &pb.BrandInfoResponse{Id: brands.Id, Name: brands.Name, Logo: brands.Logo}, nil
 }

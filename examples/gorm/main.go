@@ -1,6 +1,9 @@
 package main
 
 import (
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -8,32 +11,55 @@ import (
 	"log"
 	"os"
 	"time"
+
+	"zero-mal/examples/gorm/goods/model"
 )
 
+type GormList []string
+
+func (g GormList) Value() (driver.Value, error) {
+	return json.Marshal(g)
+}
+
+// 实现 sql.Scanner 接口，Scan 将 value 扫描至 Jsonb
+func (g *GormList) Scan(value interface{}) error {
+	return json.Unmarshal(value.([]byte), &g)
+}
+
+type BaseModel1 struct {
+	ID        int32      `gorm:"primarykey"`
+	CreatedAt *time.Time `gorm:"column:add_time"`
+	UpdatedAt time.Time  `gorm:"column:update_time"`
+	DeletedAt gorm.DeletedAt
+	IsDeleted bool
+}
 type (
 	BaseModel struct {
-		Id int32 `gorm:"primarykey"`
-
-		CreatedAt time.Time `gorm:"column:add_time"`
-		UpdatedAt time.Time `gorm:"column:update_time"`
+		Id        int32      `gorm:"primarykey"` //为什么使用int32， bigint
+		CreatedAt *time.Time `gorm:"column:add_time"`
+		UpdatedAt time.Time  `gorm:"column:update_time"`
 		DeletedAt gorm.DeletedAt
 		IsDeleted bool
 	}
 
-	//md5 信息摘要算法
-	User struct {
+	Category1 struct {
 		BaseModel
-		Mobile   string     `gorm:"index:idx_mobile;unique;type:varchar(11);not null"`
-		Password string     `gorm:"type:varchar(100);not null"`
-		NickName string     `gorm:"type:varchar(20);not null"`
-		Birthday *time.Time `gorm:"type:datetime"`
-		Gender   string     `gorm:"column:gender;default:male;type:varchar(6) comment 'female 表示女 male表示男'"`
-		Role     int        `gorm:"column:role;default:1;type:int(1) comment '1 表示普通用户 2表示管理员'"`
+		Name             string      `gorm:"type:varchar(20);not null" json:"name"`
+		ParentCategoryID int32       `json:"parent"`
+		ParentCategory   *Category   `json:"-"`
+		SubCategory      []*Category `gorm:"foreignKey:ParentCategoryID;references:ID" json:"sub_category"`
+		Level            int32       `gorm:"type:int;not null;default:1" json:"level"`
+		IsTab            bool        `gorm:"default:false;not null" json:"is_tab"`
 	}
-	Product struct {
-		gorm.Model
-		Code  string
-		Price uint
+
+	Category struct {
+		BaseModel
+		Name             string      `gorm:"type:varchar(20);not null" json:"name"`
+		ParentCategoryID int32       `json:"parent"`
+		ParentCategory   *Category   `json:"-"`
+		SubCategory      []*Category `gorm:"foreignKey:ParentCategoryID;references:Id" json:"sub_category"`
+		Level            int32       `gorm:"type:int;not null;default:1" json:"level"`
+		IsTab            bool        `gorm:"default:false;not null" json:"is_tab"`
 	}
 )
 
@@ -59,32 +85,19 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	// 迁移 schema
-	//db.AutoMigrate(&Product{})
+	getCate(db)
+	getCate1(db)
+}
+func getCate(db *gorm.DB) {
+	var categorys []model.Category
+	db.Where(&model.Category{Level: 1}).Preload("SubCategory.SubCategory").Find(&categorys)
+	fmt.Printf("%+v", categorys)
 
-	// Create
-	//db.Create(&Product{Code: "D42", Price: 100})
+}
 
-	// Read
-	//var product Product
-	//db.First(&product, 1)                 // 根据整型主键查找
-	//db.First(&product, "code = ?", "D42") // 查找 code 字段值为 D42 的记录
-	//
-	//// Update - 将 product 的 price 更新为 200
-	//db.Model(&product).Update("Price", 200)
-	//// Update - 更新多个字段
-	//db.Model(&product).Updates(Product{Price: 200, Code: "F42"}) // 仅更新非零值字段
-	//db.Model(&product).Updates(map[string]interface{}{"Price": 200, "Code": "F42"})
-	//
-	//// Delete - 删除 product
-	//db.Delete(&product, 1)
-	var user User
-	//db.Where("mobile", "15958615799").First(&user, 1) // 根据整型主键查找
-	db.Where("mobile", "15958615799").First(&user, 1) // 根据整型主键查找
-	userData := &User{
-		Mobile:   "15958165799",
-		NickName: "555555",
-		Password: "55555",
-	}
-	db.Model(&User{}).Create(userData)
+func getCate1(db *gorm.DB) {
+	var categorys []Category
+	db.Where(&Category{Level: 1}).Preload("SubCategory.SubCategory").Find(&categorys)
+	fmt.Printf("%+v", categorys)
+
 }
