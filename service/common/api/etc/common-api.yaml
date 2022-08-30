@@ -1,0 +1,14 @@
+Name: common-api
+Host: 0.0.0.0
+Port: 8888
+Cache:
+  - Host: 127.0.0.1:6379
+CacheRedis:
+  - Host: 127.0.0.1:6379
+    Pass: ""
+    Type: node
+AliSmsInfo:
+  ApiKey: LTAI4FvwQQ4rNnYLAEfhE19v
+  ApiSecret: wzLD9a4D9TRx1PAxulU0ezPs54W6kN
+  SignName: IT情报站
+  TemplateCode: SMS_126355393

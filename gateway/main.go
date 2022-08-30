@@ -14,7 +14,7 @@ func main() {
 	var c gateway.GatewayConf
 	conf.MustLoad(*configFile, &c)
 	gw := gateway.MustNewServer(c)
-
 	defer gw.Stop()
+	//gw.Use(middleware.BaggageHandler())
 	gw.Start()
 }

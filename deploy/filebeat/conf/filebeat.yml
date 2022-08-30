@@ -1,0 +1,28 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    # 开启json解析
+    json.keys_under_root: true
+    json.add_error_key: true
+    # 日志文件路径
+    paths:
+      - /usr/share/filebeat/logs/*.log
+
+setup.template.settings:
+  index.number_of_shards: 1
+
+# ================================= Processors =================================
+processors:
+  - decode_json_fields:
+      fields: ['@timestamp','level','content','trace','span','duration']
+      target: ""
+output.kafka:
+  enabled: true
+  hosts: ["kafka:9092"]
+  #要提前创建topic
+  topic: "looklook-log"
+  partition.hash:
+    reachable_only: true
+  compression: gzip
+  max_message_bytes: 1000000
+  required_acks: 1
