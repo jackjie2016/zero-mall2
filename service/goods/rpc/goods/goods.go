@@ -6,44 +6,44 @@ package goods
 import (
 	"context"
 
-	"zero-mal/service/goods/rpc/pb"
+	"zero-mal/service/goods/rpc/goods_pb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 )
 
 type (
-	BannerListResponse         = pb.BannerListResponse
-	BannerRequest              = pb.BannerRequest
-	BannerResponse             = pb.BannerResponse
-	BatchCategoryInfoRequest   = pb.BatchCategoryInfoRequest
-	BatchGoodsIdInfo           = pb.BatchGoodsIdInfo
-	BrandFilterRequest         = pb.BrandFilterRequest
-	BrandInfoResponse          = pb.BrandInfoResponse
-	BrandListResponse          = pb.BrandListResponse
-	BrandRequest               = pb.BrandRequest
-	CategoryBrandFilterRequest = pb.CategoryBrandFilterRequest
-	CategoryBrandListResponse  = pb.CategoryBrandListResponse
-	CategoryBrandRequest       = pb.CategoryBrandRequest
-	CategoryBrandResponse      = pb.CategoryBrandResponse
-	CategoryBriefInfoResponse  = pb.CategoryBriefInfoResponse
-	CategoryFilterRequest      = pb.CategoryFilterRequest
-	CategoryInfoRequest        = pb.CategoryInfoRequest
-	CategoryInfoResponse       = pb.CategoryInfoResponse
-	CategoryListRequest        = pb.CategoryListRequest
-	CategoryListResponse       = pb.CategoryListResponse
-	CreateGoodsInfo            = pb.CreateGoodsInfo
-	DeleteCategoryRequest      = pb.DeleteCategoryRequest
-	DeleteGoodsInfo            = pb.DeleteGoodsInfo
-	Empty                      = pb.Empty
-	FilterRequest              = pb.FilterRequest
-	GoodInfoRequest            = pb.GoodInfoRequest
-	GoodsFilterRequest         = pb.GoodsFilterRequest
-	GoodsInfoResponse          = pb.GoodsInfoResponse
-	GoodsListResponse          = pb.GoodsListResponse
-	GoodsReduceRequest         = pb.GoodsReduceRequest
-	QueryCategoryRequest       = pb.QueryCategoryRequest
-	SubCategoryListResponse    = pb.SubCategoryListResponse
+	BannerListResponse         = goods_pb.BannerListResponse
+	BannerRequest              = goods_pb.BannerRequest
+	BannerResponse             = goods_pb.BannerResponse
+	BatchCategoryInfoRequest   = goods_pb.BatchCategoryInfoRequest
+	BatchGoodsIdInfo           = goods_pb.BatchGoodsIdInfo
+	BrandFilterRequest         = goods_pb.BrandFilterRequest
+	BrandInfoResponse          = goods_pb.BrandInfoResponse
+	BrandListResponse          = goods_pb.BrandListResponse
+	BrandRequest               = goods_pb.BrandRequest
+	CategoryBrandFilterRequest = goods_pb.CategoryBrandFilterRequest
+	CategoryBrandListResponse  = goods_pb.CategoryBrandListResponse
+	CategoryBrandRequest       = goods_pb.CategoryBrandRequest
+	CategoryBrandResponse      = goods_pb.CategoryBrandResponse
+	CategoryBriefInfoResponse  = goods_pb.CategoryBriefInfoResponse
+	CategoryFilterRequest      = goods_pb.CategoryFilterRequest
+	CategoryInfoRequest        = goods_pb.CategoryInfoRequest
+	CategoryInfoResponse       = goods_pb.CategoryInfoResponse
+	CategoryListRequest        = goods_pb.CategoryListRequest
+	CategoryListResponse       = goods_pb.CategoryListResponse
+	CreateGoodsInfo            = goods_pb.CreateGoodsInfo
+	DeleteCategoryRequest      = goods_pb.DeleteCategoryRequest
+	DeleteGoodsInfo            = goods_pb.DeleteGoodsInfo
+	Empty                      = goods_pb.Empty
+	FilterRequest              = goods_pb.FilterRequest
+	GoodInfoRequest            = goods_pb.GoodInfoRequest
+	GoodsFilterRequest         = goods_pb.GoodsFilterRequest
+	GoodsInfoResponse          = goods_pb.GoodsInfoResponse
+	GoodsListResponse          = goods_pb.GoodsListResponse
+	GoodsReduceRequest         = goods_pb.GoodsReduceRequest
+	QueryCategoryRequest       = goods_pb.QueryCategoryRequest
+	SubCategoryListResponse    = goods_pb.SubCategoryListResponse
 
 	Goods interface {
 		// 商品接口
@@ -93,128 +93,128 @@ func NewGoods(cli zrpc.Client) Goods {
 
 // 商品接口
 func (m *defaultGoods) GoodsList(ctx context.Context, in *GoodsFilterRequest, opts ...grpc.CallOption) (*GoodsListResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.GoodsList(ctx, in, opts...)
 }
 
 // 现在用户提交订单有多个商品，你得批量查询商品的信息吧
 func (m *defaultGoods) BatchGetGoods(ctx context.Context, in *BatchGoodsIdInfo, opts ...grpc.CallOption) (*GoodsListResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.BatchGetGoods(ctx, in, opts...)
 }
 
 func (m *defaultGoods) CreateGoods(ctx context.Context, in *CreateGoodsInfo, opts ...grpc.CallOption) (*GoodsInfoResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.CreateGoods(ctx, in, opts...)
 }
 
 func (m *defaultGoods) DeleteGoods(ctx context.Context, in *DeleteGoodsInfo, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.DeleteGoods(ctx, in, opts...)
 }
 
 func (m *defaultGoods) UpdateGoods(ctx context.Context, in *CreateGoodsInfo, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.UpdateGoods(ctx, in, opts...)
 }
 
 func (m *defaultGoods) GetGoodsDetail(ctx context.Context, in *GoodInfoRequest, opts ...grpc.CallOption) (*GoodsInfoResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.GetGoodsDetail(ctx, in, opts...)
 }
 
 // 商品分类
 func (m *defaultGoods) GetAllCategorysList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CategoryListResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.GetAllCategorysList(ctx, in, opts...)
 }
 
 // 获取子分类
 func (m *defaultGoods) GetSubCategory(ctx context.Context, in *CategoryListRequest, opts ...grpc.CallOption) (*SubCategoryListResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.GetSubCategory(ctx, in, opts...)
 }
 
 func (m *defaultGoods) CreateCategory(ctx context.Context, in *CategoryInfoRequest, opts ...grpc.CallOption) (*CategoryInfoResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.CreateCategory(ctx, in, opts...)
 }
 
 func (m *defaultGoods) DeleteCategory(ctx context.Context, in *DeleteCategoryRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.DeleteCategory(ctx, in, opts...)
 }
 
 func (m *defaultGoods) UpdateCategory(ctx context.Context, in *CategoryInfoRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.UpdateCategory(ctx, in, opts...)
 }
 
 // 品牌和轮播图
 func (m *defaultGoods) BrandList(ctx context.Context, in *BrandFilterRequest, opts ...grpc.CallOption) (*BrandListResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.BrandList(ctx, in, opts...)
 }
 
 func (m *defaultGoods) CreateBrand(ctx context.Context, in *BrandRequest, opts ...grpc.CallOption) (*BrandInfoResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.CreateBrand(ctx, in, opts...)
 }
 
 func (m *defaultGoods) DeleteBrand(ctx context.Context, in *BrandRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.DeleteBrand(ctx, in, opts...)
 }
 
 func (m *defaultGoods) UpdateBrand(ctx context.Context, in *BrandRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.UpdateBrand(ctx, in, opts...)
 }
 
 // 轮播图
 func (m *defaultGoods) BannerList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*BannerListResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.BannerList(ctx, in, opts...)
 }
 
 func (m *defaultGoods) CreateBanner(ctx context.Context, in *BannerRequest, opts ...grpc.CallOption) (*BannerResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.CreateBanner(ctx, in, opts...)
 }
 
 func (m *defaultGoods) DeleteBanner(ctx context.Context, in *BannerRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.DeleteBanner(ctx, in, opts...)
 }
 
 func (m *defaultGoods) UpdateBanner(ctx context.Context, in *BannerRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.UpdateBanner(ctx, in, opts...)
 }
 
 // 品牌分类
 func (m *defaultGoods) CategoryBrandList(ctx context.Context, in *CategoryBrandFilterRequest, opts ...grpc.CallOption) (*CategoryBrandListResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.CategoryBrandList(ctx, in, opts...)
 }
 
 // 通过category获取brands
 func (m *defaultGoods) GetCategoryBrandList(ctx context.Context, in *CategoryInfoRequest, opts ...grpc.CallOption) (*BrandListResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.GetCategoryBrandList(ctx, in, opts...)
 }
 
 func (m *defaultGoods) CreateCategoryBrand(ctx context.Context, in *CategoryBrandRequest, opts ...grpc.CallOption) (*CategoryBrandResponse, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.CreateCategoryBrand(ctx, in, opts...)
 }
 
 func (m *defaultGoods) DeleteCategoryBrand(ctx context.Context, in *CategoryBrandRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.DeleteCategoryBrand(ctx, in, opts...)
 }
 
 func (m *defaultGoods) UpdateCategoryBrand(ctx context.Context, in *CategoryBrandRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := pb.NewGoodsClient(m.cli.Conn())
+	client := goods_pb.NewGoodsClient(m.cli.Conn())
 	return client.UpdateCategoryBrand(ctx, in, opts...)
 }

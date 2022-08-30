@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/status"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +26,7 @@ func NewUpdateCategoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 	}
 }
 
-func (l *UpdateCategoryLogic) UpdateCategory(in *pb.CategoryInfoRequest) (*pb.Empty, error) {
+func (l *UpdateCategoryLogic) UpdateCategory(in *goods_pb.CategoryInfoRequest) (*goods_pb.Empty, error) {
 	// todo: add your logic here and delete this line
 	var category *model.Category
 
@@ -51,5 +51,5 @@ func (l *UpdateCategoryLogic) UpdateCategory(in *pb.CategoryInfoRequest) (*pb.Em
 		return nil, status.Errorf(codes.Internal, "更新失败")
 	}
 
-	return &pb.Empty{}, nil
+	return &goods_pb.Empty{}, nil
 }

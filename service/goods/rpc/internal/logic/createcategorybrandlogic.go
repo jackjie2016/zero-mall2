@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/status"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +26,7 @@ func NewCreateCategoryBrandLogic(ctx context.Context, svcCtx *svc.ServiceContext
 	}
 }
 
-func (l *CreateCategoryBrandLogic) CreateCategoryBrand(in *pb.CategoryBrandRequest) (*pb.CategoryBrandResponse, error) {
+func (l *CreateCategoryBrandLogic) CreateCategoryBrand(in *goods_pb.CategoryBrandRequest) (*goods_pb.CategoryBrandResponse, error) {
 	// todo: add your logic here and delete this line
 
 	//var category model.Category
@@ -56,5 +56,5 @@ func (l *CreateCategoryBrandLogic) CreateCategoryBrand(in *pb.CategoryBrandReque
 	if err := l.svcCtx.GoodsCategoryBrandModel.Insert(l.ctx, &categoryBrand); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "绑定失败")
 	}
-	return &pb.CategoryBrandResponse{Id: categoryBrand.Id}, nil
+	return &goods_pb.CategoryBrandResponse{Id: categoryBrand.Id}, nil
 }

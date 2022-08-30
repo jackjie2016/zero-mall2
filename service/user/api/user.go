@@ -16,6 +16,8 @@ import (
 
 var configFile = flag.String("f", "service/user/api/etc/user-api-dev.yaml", "the config file")
 
+//var configFile = flag.String("f", "etc/user-api-dev.yaml", "the config file")
+
 func main() {
 	flag.Parse()
 	var c config.Config

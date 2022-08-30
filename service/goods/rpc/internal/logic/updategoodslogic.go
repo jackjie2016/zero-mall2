@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/status"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +26,7 @@ func NewUpdateGoodsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Updat
 	}
 }
 
-func (l *UpdateGoodsLogic) UpdateGoods(req *pb.CreateGoodsInfo) (*pb.Empty, error) {
+func (l *UpdateGoodsLogic) UpdateGoods(req *goods_pb.CreateGoodsInfo) (*goods_pb.Empty, error) {
 	// todo: add your logic here and delete this line
 	var goods *model.Goods
 
@@ -85,5 +85,5 @@ func (l *UpdateGoodsLogic) UpdateGoods(req *pb.CreateGoodsInfo) (*pb.Empty, erro
 	//}
 	//tx.Commit()
 
-	return &pb.Empty{}, nil
+	return &goods_pb.Empty{}, nil
 }

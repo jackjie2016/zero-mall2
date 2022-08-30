@@ -1,0 +1,31 @@
+syntax = "v1"
+
+info (
+	title: // TODO: add title
+	desc: // TODO: add description
+	author: "紫风天下行"
+	email: "610841147@qq.com"
+)
+
+type SmsRequest {
+	// TODO: add members here and delete this comment
+	Mobile string `form:"mobile"  validate:"required,min=3,max=11,mobile"`
+}
+
+type SmsResponse {
+	// TODO: add members here and delete this comment
+}
+type CapthchaRequest {
+}
+type CapthchaResponse {
+	CaptchaId string `json:"captchaId"`
+	PicPath   string `json:"picPath"`
+}
+service common-api {
+	@handler Sms // TODO: set handler name and delete this comment
+	post /common/sms(SmsRequest) returns(SmsResponse)
+	
+	@handler Capthcha // TODO: set handler name and delete this comment
+	get /common/GetCapthcha(CapthchaRequest) returns(CapthchaResponse)
+	
+}

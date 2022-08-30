@@ -6,8 +6,8 @@ import (
 	"zero-mal/global"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewBrandListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BrandLi
 }
 
 // 品牌和轮播图
-func (l *BrandListLogic) BrandList(in *pb.BrandFilterRequest) (*pb.BrandListResponse, error) {
+func (l *BrandListLogic) BrandList(in *goods_pb.BrandFilterRequest) (*goods_pb.BrandListResponse, error) {
 	// todo: add your logic here and delete this line
 
 	var brands []model.Brands
@@ -36,7 +36,7 @@ func (l *BrandListLogic) BrandList(in *pb.BrandFilterRequest) (*pb.BrandListResp
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	brandListResponse := &pb.BrandListResponse{}
+	brandListResponse := &goods_pb.BrandListResponse{}
 	brandListResponse.Total = int32(result.RowsAffected)
 	global.DB.Scopes(tool.Paginate(int(in.Pages), int(in.PagePerNums))).Find(&brands)
 
@@ -45,7 +45,7 @@ func (l *BrandListLogic) BrandList(in *pb.BrandFilterRequest) (*pb.BrandListResp
 	brandListResponse.Total = int32(total)
 
 	for _, brand := range brands {
-		brandListResponse.Data = append(brandListResponse.Data, &pb.BrandInfoResponse{
+		brandListResponse.Data = append(brandListResponse.Data, &goods_pb.BrandInfoResponse{
 			Id:   brand.Id,
 			Name: brand.Name,
 			Logo: brand.Logo,

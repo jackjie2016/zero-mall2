@@ -7,8 +7,8 @@ import (
 	"zero-mal/global"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewCreateGoodsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Creat
 	}
 }
 
-func (l *CreateGoodsLogic) CreateGoods(req *pb.CreateGoodsInfo) (*pb.GoodsInfoResponse, error) {
+func (l *CreateGoodsLogic) CreateGoods(req *goods_pb.CreateGoodsInfo) (*goods_pb.GoodsInfoResponse, error) {
 	// todo: add your logic here and delete this line
 
 	var category model.Category
@@ -70,7 +70,7 @@ func (l *CreateGoodsLogic) CreateGoods(req *pb.CreateGoodsInfo) (*pb.GoodsInfoRe
 	}
 	tx.Commit()
 
-	return &pb.GoodsInfoResponse{
+	return &goods_pb.GoodsInfoResponse{
 		Id: goods.Id,
 	}, nil
 }

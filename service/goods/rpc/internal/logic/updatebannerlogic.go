@@ -5,8 +5,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	model "zero-mal/service/goods/model/gorm"
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +25,7 @@ func NewUpdateBannerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upda
 	}
 }
 
-func (l *UpdateBannerLogic) UpdateBanner(in *pb.BannerRequest) (*pb.Empty, error) {
+func (l *UpdateBannerLogic) UpdateBanner(in *goods_pb.BannerRequest) (*goods_pb.Empty, error) {
 	// todo: add your logic here and delete this line
 	//banner := model.Banner{
 	//	BaseModel: model.BaseModel{Id: in.Id},
@@ -42,6 +42,6 @@ func (l *UpdateBannerLogic) UpdateBanner(in *pb.BannerRequest) (*pb.Empty, error
 	if err := l.svcCtx.BannerModel.Update(l.ctx, banner); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "广告更新失败")
 	}
-	return &pb.Empty{}, nil
+	return &goods_pb.Empty{}, nil
 
 }

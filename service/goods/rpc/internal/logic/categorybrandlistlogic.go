@@ -8,8 +8,8 @@ import (
 	"zero-mal/global"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,10 +29,10 @@ func NewCategoryBrandListLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 // 品牌分类
-func (l *CategoryBrandListLogic) CategoryBrandList(in *pb.CategoryBrandFilterRequest) (*pb.CategoryBrandListResponse, error) {
+func (l *CategoryBrandListLogic) CategoryBrandList(in *goods_pb.CategoryBrandFilterRequest) (*goods_pb.CategoryBrandListResponse, error) {
 	// todo: add your logic here and delete this line
 	var categoryBrands []model.GoodsCategoryBrand
-	categoryBrandListResponse := pb.CategoryBrandListResponse{}
+	categoryBrandListResponse := goods_pb.CategoryBrandListResponse{}
 
 	var total int64
 	global.DB.Model(&model.GoodsCategoryBrand{}).Count(&total)
@@ -44,7 +44,7 @@ func (l *CategoryBrandListLogic) CategoryBrandList(in *pb.CategoryBrandFilterReq
 	var brand_temp *model.Brands
 	var categroy_temp *model.Category
 	var err error
-	var categoryResponses []*pb.CategoryBrandResponse
+	var categoryResponses []*goods_pb.CategoryBrandResponse
 	for _, categoryBrand := range categoryBrands {
 		//查询分类，用go-zero的model
 		if brand_temp, err = l.svcCtx.BrandsModel.FindOne(l.ctx, int64(categoryBrand.BrandId)); err != nil {
@@ -55,16 +55,16 @@ func (l *CategoryBrandListLogic) CategoryBrandList(in *pb.CategoryBrandFilterReq
 			return nil, status.Errorf(codes.InvalidArgument, "分类不存在")
 		}
 
-		categoryResponses = append(categoryResponses, &pb.CategoryBrandResponse{
+		categoryResponses = append(categoryResponses, &goods_pb.CategoryBrandResponse{
 			Id: categoryBrand.Id,
-			Category: &pb.CategoryInfoResponse{
+			Category: &goods_pb.CategoryInfoResponse{
 				Id:             categroy_temp.Id,
 				Name:           categroy_temp.Name,
 				Level:          categroy_temp.Level,
 				IsTab:          categroy_temp.IsTab,
 				ParentCategory: categroy_temp.ParentCategoryID,
 			},
-			Brand: &pb.BrandInfoResponse{
+			Brand: &goods_pb.BrandInfoResponse{
 				Id:   brand_temp.Id,
 				Name: brand_temp.Name,
 				Logo: brand_temp.Logo,

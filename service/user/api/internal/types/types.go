@@ -19,13 +19,12 @@ type Inforequest struct {
 }
 
 type Inforesponse struct {
-	ID           int64  `json:"id"`
-	Username     string `json:"user_name"`
-	NickName     string `json:"nick_name"`
-	Gender       string `json:"gender"`
-	AccessToken  string `json:"accessToken"`
-	AccessExpire int64  `json:"accessExpire"`
-	RefreshAfter int64  `json:"refreshAfter"`
+	ID       int64  `json:"id"`
+	Username string `json:"user_name"`
+	NickName string `json:"nick_name"`
+	Gender   string `json:"gender"`
+	HeadUrl  string `json:"head_url"`
+	Desc     string `json:"desc"`
 }
 
 type Createrequest struct {

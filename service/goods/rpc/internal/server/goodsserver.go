@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
+	pb "zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/logic"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 )
 
 type GoodsServer struct {

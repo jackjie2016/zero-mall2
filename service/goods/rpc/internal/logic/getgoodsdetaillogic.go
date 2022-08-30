@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/status"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +26,7 @@ func NewGetGoodsDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 	}
 }
 
-func (l *GetGoodsDetailLogic) GetGoodsDetail(req *pb.GoodInfoRequest) (*pb.GoodsInfoResponse, error) {
+func (l *GetGoodsDetailLogic) GetGoodsDetail(req *goods_pb.GoodInfoRequest) (*goods_pb.GoodsInfoResponse, error) {
 	// todo: add your logic here and delete this line
 	var good *model.Goods
 	good, err := l.svcCtx.GoodsModel.FindOne(l.ctx, int64(req.Id))

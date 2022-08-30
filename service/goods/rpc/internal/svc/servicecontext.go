@@ -6,7 +6,7 @@ import (
 
 	model "zero-mal/service/goods/model/gorm"
 
-	"zero-mal/service/user/rpc/initialize"
+	"zero-mal/service/goods/rpc/internal/initialize"
 )
 
 type ServiceContext struct {
@@ -24,6 +24,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	//	initialize.InitDb(c.DB.DataSource)
 	//}
 	initialize.InitDb(c.DB.DataSource)
+	initialize.InitEs(c.Es)
 	return &ServiceContext{
 		Config:                  c,
 		GoodsModel:              model.NewGoodsModel(global.DB, c.Cache),

@@ -14,7 +14,10 @@ import (
 func GetUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.Inforequest
-
+		//logx.Error("测试Error的日志")
+		//logx.Info("测试Info的日志")
+		//logx.Slow("测试Slow的日志")
+		//logx.Stat("测试Stat的日志")
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, errorx.NewDefaultError(err.Error()))
 			return

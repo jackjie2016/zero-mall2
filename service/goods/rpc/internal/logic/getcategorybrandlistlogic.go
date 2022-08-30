@@ -7,8 +7,8 @@ import (
 	"zero-mal/global"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,10 +28,10 @@ func NewGetCategoryBrandListLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 // 通过category获取brands
-func (l *GetCategoryBrandListLogic) GetCategoryBrandList(in *pb.CategoryInfoRequest) (*pb.BrandListResponse, error) {
+func (l *GetCategoryBrandListLogic) GetCategoryBrandList(in *goods_pb.CategoryInfoRequest) (*goods_pb.BrandListResponse, error) {
 	// todo: add your logic here and delete this line
 
-	brandListResponse := pb.BrandListResponse{}
+	brandListResponse := goods_pb.BrandListResponse{}
 
 	//var category *model.Category
 	var err error
@@ -49,14 +49,14 @@ func (l *GetCategoryBrandListLogic) GetCategoryBrandList(in *pb.CategoryInfoRequ
 		brandListResponse.Total = int32(result.RowsAffected)
 	}
 	var brand_temp *model.Brands
-	var brandInfoResponses []*pb.BrandInfoResponse
+	var brandInfoResponses []*goods_pb.BrandInfoResponse
 	for _, categoryBrand := range categoryBrands {
 		//查询分类，用go-zero的model
 		if brand_temp, err = l.svcCtx.BrandsModel.FindOne(l.ctx, int64(categoryBrand.BrandId)); err != nil {
 			return nil, status.Errorf(codes.InvalidArgument, "品牌不存在")
 		}
 
-		brandInfoResponses = append(brandInfoResponses, &pb.BrandInfoResponse{
+		brandInfoResponses = append(brandInfoResponses, &goods_pb.BrandInfoResponse{
 			Id:   brand_temp.Id,
 			Name: brand_temp.Name,
 			Logo: brand_temp.Logo,

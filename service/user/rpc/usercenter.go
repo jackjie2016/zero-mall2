@@ -6,7 +6,7 @@ import (
 	"zero-mal/service/user/rpc/internal/config"
 	"zero-mal/service/user/rpc/internal/server"
 	"zero-mal/service/user/rpc/internal/svc"
-	"zero-mal/service/user/rpc/pb"
+	pb "zero-mal/service/user/rpc/user_pb"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -33,7 +33,7 @@ func main() {
 		}
 	})
 	defer s.Stop()
- 
+
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
 }

@@ -7,8 +7,8 @@ import (
 	"zero-mal/global"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewCreateBrandLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Creat
 	}
 }
 
-func (l *CreateBrandLogic) CreateBrand(in *pb.BrandRequest) (*pb.BrandInfoResponse, error) {
+func (l *CreateBrandLogic) CreateBrand(in *goods_pb.BrandRequest) (*goods_pb.BrandInfoResponse, error) {
 	// todo: add your logic here and delete this line
 
 	//新建品牌
@@ -40,5 +40,5 @@ func (l *CreateBrandLogic) CreateBrand(in *pb.BrandRequest) (*pb.BrandInfoRespon
 	}
 
 	global.DB.Save(brands)
-	return &pb.BrandInfoResponse{Id: brands.Id, Name: brands.Name, Logo: brands.Logo}, nil
+	return &goods_pb.BrandInfoResponse{Id: brands.Id, Name: brands.Name, Logo: brands.Logo}, nil
 }

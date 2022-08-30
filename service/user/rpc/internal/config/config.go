@@ -11,8 +11,9 @@ type Config struct {
 	DB struct {
 		DataSource string
 	}
-	Cache   cache.CacheConf
-	JwtAuth struct {
+	Cache      cache.CacheConf
+	CacheRedis cache.CacheConf
+	JwtAuth    struct {
 		AccessSecret string
 		AccessExpire int64
 	}

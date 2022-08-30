@@ -7,8 +7,8 @@ import (
 	"zero-mal/global"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +27,7 @@ func NewUpdateCategoryBrandLogic(ctx context.Context, svcCtx *svc.ServiceContext
 	}
 }
 
-func (l *UpdateCategoryBrandLogic) UpdateCategoryBrand(in *pb.CategoryBrandRequest) (*pb.Empty, error) {
+func (l *UpdateCategoryBrandLogic) UpdateCategoryBrand(in *goods_pb.CategoryBrandRequest) (*goods_pb.Empty, error) {
 	// todo: add your logic here and delete this line
 	var categoryBrand model.GoodsCategoryBrand
 
@@ -48,5 +48,5 @@ func (l *UpdateCategoryBrandLogic) UpdateCategoryBrand(in *pb.CategoryBrandReque
 
 	global.DB.Save(&categoryBrand)
 
-	return &pb.Empty{}, nil
+	return &goods_pb.Empty{}, nil
 }

@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
@@ -9,7 +10,7 @@ import (
 	"time"
 	"zero-mal/common/ctxdata"
 	"zero-mal/service/user/rpc/internal/svc"
-	"zero-mal/service/user/rpc/pb"
+	pb "zero-mal/service/user/rpc/user_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -37,18 +38,26 @@ func (l *GenerateTokenLogic) GenerateToken(in *pb.GenerateTokenReq) (*pb.Generat
 		return nil, status.Errorf(codes.AlreadyExists, "用户不存在")
 	}
 
+	var GenerateTokenResp *pb.GenerateTokenResp
+	l.svcCtx.Cache.Get(fmt.Sprintf("login_token:%d", in.UserId), &GenerateTokenResp)
+
+	if GenerateTokenResp != nil {
+		return GenerateTokenResp, nil
+	}
 	now := time.Now().Unix()
 	accessExpire := l.svcCtx.Config.JwtAuth.AccessExpire
 	accessToken, err := getJwtToken(l.svcCtx.Config.JwtAuth.AccessSecret, now, accessExpire, in.UserId)
 	if err != nil {
 		return nil, errors.Wrapf(ErrGenerateTokenError, "getJwtToken err userId:%d , err:%v", in.UserId, err)
 	}
-
-	return &pb.GenerateTokenResp{
+	GenerateTokenResp = &pb.GenerateTokenResp{
 		AccessToken:  accessToken,
 		AccessExpire: now + accessExpire,
 		RefreshAfter: now + accessExpire/2,
-	}, nil
+	}
+	l.svcCtx.Cache.SetWithExpire(fmt.Sprintf("login_token:%d", in.UserId), GenerateTokenResp, time.Duration(accessExpire-20))
+
+	return GenerateTokenResp, nil
 
 }
 

@@ -5,8 +5,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,10 +25,10 @@ func NewDeleteBrandLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delet
 	}
 }
 
-func (l *DeleteBrandLogic) DeleteBrand(in *pb.BrandRequest) (*pb.Empty, error) {
+func (l *DeleteBrandLogic) DeleteBrand(in *goods_pb.BrandRequest) (*goods_pb.Empty, error) {
 	// todo: add your logic here and delete this line
 	if err := l.svcCtx.BrandsModel.Delete(l.ctx, int64(in.Id)); err != nil {
 		return nil, status.Errorf(codes.NotFound, "品牌不存在")
 	}
-	return &pb.Empty{}, nil
+	return &goods_pb.Empty{}, nil
 }

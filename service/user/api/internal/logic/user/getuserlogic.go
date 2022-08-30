@@ -3,9 +3,10 @@ package user
 import (
 	"context"
 	"fmt"
+	errorx "zero-mal/common/error"
 	"zero-mal/service/user/api/internal/svc"
 	"zero-mal/service/user/api/internal/types"
-	"zero-mal/service/user/rpc/pb"
+	pb "zero-mal/service/user/rpc/user_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,8 +28,12 @@ func NewGetUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserLo
 func (l *GetUserLogic) GetUser(req *types.Inforequest) (resp *types.Inforesponse, err error) {
 	// todo: add your logic here and delete this line
 
-	response, _ := l.svcCtx.UserRpc.GetUserById(l.ctx, &pb.GetUserByIdReq{Id: req.Id})
+	response, err := l.svcCtx.UserRpc.GetUserById(l.ctx, &pb.GetUserByIdReq{Id: req.Id})
 	fmt.Println(response)
+
+	if err != nil {
+		return nil, errorx.NewDefaultError("用户不存在")
+	}
 
 	//msg, _ := json.Marshal(struct {
 	//	Code int64
@@ -43,5 +48,7 @@ func (l *GetUserLogic) GetUser(req *types.Inforequest) (resp *types.Inforesponse
 		Username: response.User.Mobile,
 		NickName: response.User.NickName,
 		Gender:   response.User.Gender,
+		Desc:     response.User.Desc,
+		HeadUrl:  response.User.HeadUrl,
 	}, nil
 }

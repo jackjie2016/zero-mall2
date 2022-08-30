@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
 	"time"
 )
 
 func main() {
 	//time.Unix()
+	logx.Error("测试的日志")
 
 	//获取当前时间
 	var t = time.Now()

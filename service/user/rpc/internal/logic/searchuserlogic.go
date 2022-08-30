@@ -13,7 +13,7 @@ import (
 
 	"zero-mal/common/tool"
 	"zero-mal/service/user/rpc/internal/svc"
-	"zero-mal/service/user/rpc/pb"
+	pb "zero-mal/service/user/rpc/user_pb"
 )
 
 type SearchUserLogic struct {

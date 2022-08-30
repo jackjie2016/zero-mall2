@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/status"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +26,7 @@ func NewCreateCategoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 	}
 }
 
-func (l *CreateCategoryLogic) CreateCategory(in *pb.CategoryInfoRequest) (*pb.CategoryInfoResponse, error) {
+func (l *CreateCategoryLogic) CreateCategory(in *goods_pb.CategoryInfoRequest) (*goods_pb.CategoryInfoResponse, error) {
 	// todo: add your logic here and delete this line
 	category := model.Category{}
 
@@ -44,7 +44,7 @@ func (l *CreateCategoryLogic) CreateCategory(in *pb.CategoryInfoRequest) (*pb.Ca
 		return nil, status.Errorf(codes.InvalidArgument, "分类创建失败")
 	}
 
-	return &pb.CategoryInfoResponse{
+	return &goods_pb.CategoryInfoResponse{
 		Id:             category.Id,
 		Name:           category.Name,
 		ParentCategory: category.ParentCategoryID,

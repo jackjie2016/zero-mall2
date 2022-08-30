@@ -8,12 +8,12 @@ import (
 
 	"zero-mal/service/user/rpc/internal/logic"
 	"zero-mal/service/user/rpc/internal/svc"
-	"zero-mal/service/user/rpc/pb"
+	"zero-mal/service/user/rpc/user_pb"
 )
 
 type UsercenterServer struct {
 	svcCtx *svc.ServiceContext
-	pb.UnimplementedUsercenterServer
+	user_pb.UnimplementedUsercenterServer
 }
 
 func NewUsercenterServer(svcCtx *svc.ServiceContext) *UsercenterServer {
@@ -23,42 +23,42 @@ func NewUsercenterServer(svcCtx *svc.ServiceContext) *UsercenterServer {
 }
 
 // -----------------------user-----------------------
-func (s *UsercenterServer) CreateUser(ctx context.Context, in *pb.CreateUserInfo) (*pb.GenerateTokenResp, error) {
+func (s *UsercenterServer) CreateUser(ctx context.Context, in *user_pb.CreateUserInfo) (*user_pb.GenerateTokenResp, error) {
 	l := logic.NewCreateUserLogic(ctx, s.svcCtx)
 	return l.CreateUser(in)
 }
 
-func (s *UsercenterServer) UpdateUser(ctx context.Context, in *pb.UpdateUserReq) (*pb.UpdateUserResp, error) {
+func (s *UsercenterServer) UpdateUser(ctx context.Context, in *user_pb.UpdateUserReq) (*user_pb.UpdateUserResp, error) {
 	l := logic.NewUpdateUserLogic(ctx, s.svcCtx)
 	return l.UpdateUser(in)
 }
 
-func (s *UsercenterServer) DelUser(ctx context.Context, in *pb.DelUserReq) (*pb.DelUserResp, error) {
+func (s *UsercenterServer) DelUser(ctx context.Context, in *user_pb.DelUserReq) (*user_pb.DelUserResp, error) {
 	l := logic.NewDelUserLogic(ctx, s.svcCtx)
 	return l.DelUser(in)
 }
 
-func (s *UsercenterServer) GetUserById(ctx context.Context, in *pb.GetUserByIdReq) (*pb.GetUserByIdResp, error) {
+func (s *UsercenterServer) GetUserById(ctx context.Context, in *user_pb.GetUserByIdReq) (*user_pb.GetUserByIdResp, error) {
 	l := logic.NewGetUserByIdLogic(ctx, s.svcCtx)
 	return l.GetUserById(in)
 }
 
-func (s *UsercenterServer) SearchUser(ctx context.Context, in *pb.SearchUserReq) (*pb.UserListResponse, error) {
+func (s *UsercenterServer) SearchUser(ctx context.Context, in *user_pb.SearchUserReq) (*user_pb.UserListResponse, error) {
 	l := logic.NewSearchUserLogic(ctx, s.svcCtx)
 	return l.SearchUser(in)
 }
 
-func (s *UsercenterServer) GetUserByMobile(ctx context.Context, in *pb.MobileRequest) (*pb.UserInfoResponse, error) {
+func (s *UsercenterServer) GetUserByMobile(ctx context.Context, in *user_pb.MobileRequest) (*user_pb.UserInfoResponse, error) {
 	l := logic.NewGetUserByMobileLogic(ctx, s.svcCtx)
 	return l.GetUserByMobile(in)
 }
 
-func (s *UsercenterServer) CheckPassWord(ctx context.Context, in *pb.CheckInfo) (*pb.CheckResponse, error) {
+func (s *UsercenterServer) CheckPassWord(ctx context.Context, in *user_pb.CheckInfo) (*user_pb.CheckResponse, error) {
 	l := logic.NewCheckPassWordLogic(ctx, s.svcCtx)
 	return l.CheckPassWord(in)
 }
 
-func (s *UsercenterServer) GenerateToken(ctx context.Context, in *pb.GenerateTokenReq) (*pb.GenerateTokenResp, error) {
+func (s *UsercenterServer) GenerateToken(ctx context.Context, in *user_pb.GenerateTokenReq) (*user_pb.GenerateTokenResp, error) {
 	l := logic.NewGenerateTokenLogic(ctx, s.svcCtx)
 	return l.GenerateToken(in)
 }

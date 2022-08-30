@@ -12,7 +12,7 @@ import (
 	"zero-mal/global"
 	model "zero-mal/service/user/model/genModel"
 	"zero-mal/service/user/rpc/internal/svc"
-	"zero-mal/service/user/rpc/pb"
+	pb "zero-mal/service/user/rpc/user_pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

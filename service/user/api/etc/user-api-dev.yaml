@@ -8,6 +8,13 @@ UserRpc:
   Endpoints:
    - 127.0.0.1:8001
 #  Target: k8s://default/user-rpc:8001
-
+Cache:
+  - Host: 127.0.0.1:6379
+CacheRedis:
+  - Host: 127.0.0.1:6379
+    Pass: ""
+    Type: node
 Log:
-  Encoding: plain
+  ServiceName: user-api
+  Level: info
+  Mode: file

@@ -7,8 +7,8 @@ import (
 	"zero-mal/global"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,16 +28,16 @@ func NewGetSubCategoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 // 获取子分类
-func (l *GetSubCategoryLogic) GetSubCategory(in *pb.CategoryListRequest) (*pb.SubCategoryListResponse, error) {
+func (l *GetSubCategoryLogic) GetSubCategory(in *goods_pb.CategoryListRequest) (*goods_pb.SubCategoryListResponse, error) {
 	// todo: add your logic here and delete this line
-	categoryListResponse := pb.SubCategoryListResponse{}
+	categoryListResponse := goods_pb.SubCategoryListResponse{}
 
 	var category model.Category
 	if result := global.DB.First(&category, in.Id); result.RowsAffected == 0 {
 		return nil, status.Errorf(codes.NotFound, "商品分类不存在")
 	}
 
-	categoryListResponse.Info = &pb.CategoryInfoResponse{
+	categoryListResponse.Info = &goods_pb.CategoryInfoResponse{
 		Id:             category.Id,
 		Name:           category.Name,
 		Level:          int32(category.Level),
@@ -46,7 +46,7 @@ func (l *GetSubCategoryLogic) GetSubCategory(in *pb.CategoryListRequest) (*pb.Su
 	}
 
 	var subCategorys []model.Category
-	var subCategoryResponse []*pb.CategoryInfoResponse
+	var subCategoryResponse []*goods_pb.CategoryInfoResponse
 	//preloads := "SubCategory"
 	//if category.Level == 1 {
 	//	preloads = "SubCategory.SubCategory"
@@ -54,7 +54,7 @@ func (l *GetSubCategoryLogic) GetSubCategory(in *pb.CategoryListRequest) (*pb.Su
 	global.DB.Where(&model.Category{ParentCategoryID: in.Id}).Find(&subCategorys)
 
 	for _, subCategory := range subCategorys {
-		subCategoryResponse = append(subCategoryResponse, &pb.CategoryInfoResponse{
+		subCategoryResponse = append(subCategoryResponse, &goods_pb.CategoryInfoResponse{
 			Id:             subCategory.Id,
 			Name:           subCategory.Name,
 			Level:          subCategory.Level,

@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/status"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +26,7 @@ func NewUpdateBrandLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Updat
 	}
 }
 
-func (l *UpdateBrandLogic) UpdateBrand(in *pb.BrandRequest) (*pb.Empty, error) {
+func (l *UpdateBrandLogic) UpdateBrand(in *goods_pb.BrandRequest) (*goods_pb.Empty, error) {
 	// todo: add your logic here and delete this line
 	var brand *model.Brands
 	var err error
@@ -45,5 +45,5 @@ func (l *UpdateBrandLogic) UpdateBrand(in *pb.BrandRequest) (*pb.Empty, error) {
 	if err := l.svcCtx.BrandsModel.Update(l.ctx, brand); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "品牌更新失败")
 	}
-	return &pb.Empty{}, nil
+	return &goods_pb.Empty{}, nil
 }

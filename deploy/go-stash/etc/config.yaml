@@ -1,45 +1,46 @@
 Clusters:
   - Input:
       Kafka:
-        Name: gostash
+        Name: go-stash
+        Log:
+          Mode: file
         Brokers:
           - "kafka:9092"
         Topics:
           - looklook-log
-        Group: pro
-        Consumers: 16
+        Group: stash
+        Conns: 3
+        Consumers: 10
+        Processors: 60
+        MinBytes: 1048576
+        MaxBytes: 10485760
+        Offset: first
     Filters:
       - Action: drop
         Conditions:
-          - Key: k8s_container_name
-            Value: "-rpc"
+          - Key: status
+            Value: "503"
             Type: contains
-          - Key: level
-            Value: info
+          - Key: type
+            Value: "app"
             Type: match
             Op: and
       - Action: remove_field
         Fields:
-          # - message
-          - _source
-          - _type
-          - _score
-          - _id
-          - "@version"
-          - topic
-          - index
-          - beat
-          - docker_container
-          - offset
-          - prospector
           - source
-          - stream
+          - _score
           - "@metadata"
-      - Action: transfer
-        Field: message
-        Target: data
+          - agent
+          - ecs
+          - input
+          - log
+          - fields
     Output:
       ElasticSearch:
         Hosts:
           - "http://elasticsearch:9200"
-        Index: "looklook-{{yyyy-MM-dd}}"
+        Index: "looklook-log-{{yyyy.MM.dd}}"
+        MaxChunkBytes: 5242880
+        GracePeriod: 10s
+        Compress: false
+        TimeZone: UTC

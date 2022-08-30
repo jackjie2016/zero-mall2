@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/status"
 	model "zero-mal/service/goods/model/gorm"
 
+	"zero-mal/service/goods/rpc/goods_pb"
 	"zero-mal/service/goods/rpc/internal/svc"
-	"zero-mal/service/goods/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +26,7 @@ func NewCreateBannerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Crea
 	}
 }
 
-func (l *CreateBannerLogic) CreateBanner(in *pb.BannerRequest) (*pb.BannerResponse, error) {
+func (l *CreateBannerLogic) CreateBanner(in *goods_pb.BannerRequest) (*goods_pb.BannerResponse, error) {
 	// todo: add your logic here and delete this line
 
 	banner := model.Banner{
@@ -39,7 +39,7 @@ func (l *CreateBannerLogic) CreateBanner(in *pb.BannerRequest) (*pb.BannerRespon
 	if err := l.svcCtx.BannerModel.Insert(l.ctx, &banner); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "广告创建失败")
 	}
-	var respose pb.BannerResponse
+	var respose goods_pb.BannerResponse
 	respose.Id = banner.Id
 	respose.Image = banner.Image
 	respose.Index = banner.Index

@@ -6,33 +6,33 @@ package usercenter
 import (
 	"context"
 
-	"zero-mal/service/user/rpc/pb"
+	"zero-mal/service/user/rpc/user_pb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 )
 
 type (
-	AddUserReq        = pb.AddUserReq
-	AddUserResp       = pb.AddUserResp
-	CheckInfo         = pb.CheckInfo
-	CheckResponse     = pb.CheckResponse
-	CreateUserInfo    = pb.CreateUserInfo
-	DelUserReq        = pb.DelUserReq
-	DelUserResp       = pb.DelUserResp
-	GenerateTokenReq  = pb.GenerateTokenReq
-	GenerateTokenResp = pb.GenerateTokenResp
-	GetUserByIdReq    = pb.GetUserByIdReq
-	GetUserByIdResp   = pb.GetUserByIdResp
-	MobileRequest     = pb.MobileRequest
-	PageInfo          = pb.PageInfo
-	SearchUserReq     = pb.SearchUserReq
-	SearchUserResp    = pb.SearchUserResp
-	UpdateUserReq     = pb.UpdateUserReq
-	UpdateUserResp    = pb.UpdateUserResp
-	User              = pb.User
-	UserInfoResponse  = pb.UserInfoResponse
-	UserListResponse  = pb.UserListResponse
+	AddUserReq        = user_pb.AddUserReq
+	AddUserResp       = user_pb.AddUserResp
+	CheckInfo         = user_pb.CheckInfo
+	CheckResponse     = user_pb.CheckResponse
+	CreateUserInfo    = user_pb.CreateUserInfo
+	DelUserReq        = user_pb.DelUserReq
+	DelUserResp       = user_pb.DelUserResp
+	GenerateTokenReq  = user_pb.GenerateTokenReq
+	GenerateTokenResp = user_pb.GenerateTokenResp
+	GetUserByIdReq    = user_pb.GetUserByIdReq
+	GetUserByIdResp   = user_pb.GetUserByIdResp
+	MobileRequest     = user_pb.MobileRequest
+	PageInfo          = user_pb.PageInfo
+	SearchUserReq     = user_pb.SearchUserReq
+	SearchUserResp    = user_pb.SearchUserResp
+	UpdateUserReq     = user_pb.UpdateUserReq
+	UpdateUserResp    = user_pb.UpdateUserResp
+	User              = user_pb.User
+	UserInfoResponse  = user_pb.UserInfoResponse
+	UserListResponse  = user_pb.UserListResponse
 
 	Usercenter interface {
 		// -----------------------user-----------------------
@@ -59,41 +59,41 @@ func NewUsercenter(cli zrpc.Client) Usercenter {
 
 // -----------------------user-----------------------
 func (m *defaultUsercenter) CreateUser(ctx context.Context, in *CreateUserInfo, opts ...grpc.CallOption) (*GenerateTokenResp, error) {
-	client := pb.NewUsercenterClient(m.cli.Conn())
+	client := user_pb.NewUsercenterClient(m.cli.Conn())
 	return client.CreateUser(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) UpdateUser(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*UpdateUserResp, error) {
-	client := pb.NewUsercenterClient(m.cli.Conn())
+	client := user_pb.NewUsercenterClient(m.cli.Conn())
 	return client.UpdateUser(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) DelUser(ctx context.Context, in *DelUserReq, opts ...grpc.CallOption) (*DelUserResp, error) {
-	client := pb.NewUsercenterClient(m.cli.Conn())
+	client := user_pb.NewUsercenterClient(m.cli.Conn())
 	return client.DelUser(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) GetUserById(ctx context.Context, in *GetUserByIdReq, opts ...grpc.CallOption) (*GetUserByIdResp, error) {
-	client := pb.NewUsercenterClient(m.cli.Conn())
+	client := user_pb.NewUsercenterClient(m.cli.Conn())
 	return client.GetUserById(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) SearchUser(ctx context.Context, in *SearchUserReq, opts ...grpc.CallOption) (*UserListResponse, error) {
-	client := pb.NewUsercenterClient(m.cli.Conn())
+	client := user_pb.NewUsercenterClient(m.cli.Conn())
 	return client.SearchUser(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) GetUserByMobile(ctx context.Context, in *MobileRequest, opts ...grpc.CallOption) (*UserInfoResponse, error) {
-	client := pb.NewUsercenterClient(m.cli.Conn())
+	client := user_pb.NewUsercenterClient(m.cli.Conn())
 	return client.GetUserByMobile(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) CheckPassWord(ctx context.Context, in *CheckInfo, opts ...grpc.CallOption) (*CheckResponse, error) {
-	client := pb.NewUsercenterClient(m.cli.Conn())
+	client := user_pb.NewUsercenterClient(m.cli.Conn())
 	return client.CheckPassWord(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error) {
-	client := pb.NewUsercenterClient(m.cli.Conn())
+	client := user_pb.NewUsercenterClient(m.cli.Conn())
 	return client.GenerateToken(ctx, in, opts...)
 }

@@ -2,11 +2,12 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
 	"zero-mal/common/xerr"
 	model "zero-mal/service/user/model/genModel"
 	"zero-mal/service/user/rpc/internal/svc"
-	"zero-mal/service/user/rpc/pb"
+	pb "zero-mal/service/user/rpc/user_pb"
 	"zero-mal/service/user/rpc/usercenter"
 
 	"github.com/jinzhu/copier"
@@ -47,7 +48,9 @@ func NewGetUserByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 //}
 func (l *GetUserByIdLogic) GetUserById(in *pb.GetUserByIdReq) (*pb.GetUserByIdResp, error) {
 	// todo: add your logic here and delete this line
-	user, err := l.svcCtx.UserModel.FindOne(l.ctx, in.Id)
+	fmt.Println(in.Id)
+	user, err := l.svcCtx.UserGormModel.FindOne(l.ctx, in.Id)
+	fmt.Println(user)
 	if err != nil && err != model.ErrNotFound {
 		return nil, errors.Wrapf(xerr.NewErrMsg("get user  fail"), "err : %v , in : %+v", err, in)
 	}

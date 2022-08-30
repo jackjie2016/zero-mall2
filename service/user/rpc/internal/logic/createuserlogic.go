@@ -15,7 +15,7 @@ import (
 	"zero-mal/global"
 	Grommodel "zero-mal/service/user/model/gorm"
 	"zero-mal/service/user/rpc/internal/svc"
-	"zero-mal/service/user/rpc/pb"
+	pb "zero-mal/service/user/rpc/user_pb"
 	"zero-mal/service/user/rpc/usercenter"
 )
 
@@ -89,6 +89,6 @@ func (l *CreateUserLogic) CreateUser(in *pb.CreateUserInfo) (*pb.GenerateTokenRe
 		AccessExpire: tokenResp.AccessExpire,
 		RefreshAfter: tokenResp.RefreshAfter,
 	}
- 
+
 	return &respUser, nil
 }
