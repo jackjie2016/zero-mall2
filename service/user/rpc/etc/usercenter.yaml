@@ -1,5 +1,10 @@
-Name: usercenter.rpc
-ListenOn: 0.0.0.0:80
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-svc
+data:
+  Name: usercenter.rpc
+  ListenOn: 0.0.0.0:80
 #Etcd:
 #  Hosts:
 #  - 127.0.0.1:2379

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"flag"
+	//"flag"
 	"fmt"
+	"github.com/namsral/flag" //k8s 中读取环境变量
 	"zero-mal/service/user/rpc/internal/config"
 	"zero-mal/service/user/rpc/internal/server"
 	"zero-mal/service/user/rpc/internal/svc"

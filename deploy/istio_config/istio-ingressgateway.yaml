@@ -8,7 +8,7 @@ metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
       {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"istio-ingressgateway","install.operator.istio.io/owning-resource":"unknown","install.operator.istio.io/owning-resource-namespace":"istio-system","istio":"ingressgateway","istio.io/rev":"default","operator.istio.io/component":"IngressGateways","operator.istio.io/managed":"Reconcile","operator.istio.io/version":"1.10.0","release":"istio"},"name":"istio-ingressgateway","namespace":"istio-system"},"spec":{"ports":[{"name":"status-port","port":15021,"protocol":"TCP","targetPort":15021},{"name":"http2","port":80,"protocol":"TCP","targetPort":8080},{"name":"https","port":443,"protocol":"TCP","targetPort":8443},{"name":"tcp","port":31400,"protocol":"TCP","targetPort":31400},{"name":"tls","port":15443,"protocol":"TCP","targetPort":15443}],"selector":{"app":"istio-ingressgateway","istio":"ingressgateway"},"type":"LoadBalancer"}}
-  creationTimestamp: "2022-07-16T16:20:01Z"
+  creationTimestamp: "2022-09-05T11:31:10Z"
   labels:
     app: istio-ingressgateway
     install.operator.istio.io/owning-resource: unknown
@@ -21,13 +21,13 @@ metadata:
     release: istio
   name: istio-ingressgateway
   namespace: istio-system
-  resourceVersion: "91292"
-  uid: c242535c-1ebd-4985-91e3-10d13f12c343
+  resourceVersion: "17968"
+  uid: 06ee16a4-f9e6-489c-ae49-8a01ccf3bd41
 spec:
   allocateLoadBalancerNodePorts: true
-  clusterIP: 10.96.28.185
+  clusterIP: 10.96.199.28
   clusterIPs:
-    - 10.96.28.185
+    - 10.96.199.28
   externalIPs:
     - 192.168.31.148
   externalTrafficPolicy: Cluster
@@ -37,27 +37,27 @@ spec:
   ipFamilyPolicy: SingleStack
   ports:
     - name: status-port
-      nodePort: 32391
+      nodePort: 30513
       port: 15021
       protocol: TCP
       targetPort: 15021
     - name: http2
-      nodePort: 32175
+      nodePort: 32706
       port: 80
       protocol: TCP
       targetPort: 8080
     - name: https
-      nodePort: 31528
+      nodePort: 30745
       port: 443
       protocol: TCP
       targetPort: 8443
     - name: tcp
-      nodePort: 30765
+      nodePort: 32596
       port: 31400
       protocol: TCP
       targetPort: 31400
     - name: tls
-      nodePort: 31433
+      nodePort: 30732
       port: 15443
       protocol: TCP
       targetPort: 15443
